@@ -1,22 +1,22 @@
--- Create database
-CREATE DATABASE payroll_database;
-USE payroll_database;
+-- create database
+create database payroll_database;
+use payroll_database;
 
--- Create employees table
-CREATE TABLE employees (
-    EMPLOYEE_ID INT PRIMARY KEY,
-    NAME TEXT,
-    DEPARTMENT TEXT,
-    EMAIL TEXT,
-    PHONE_NO NUMERIC,
-    JOINING_DATE DATE,
-    SALARY NUMERIC,
-    BONUS NUMERIC,
-    TAX_PERCENTAGE NUMERIC
+-- create employees table
+create table employees (
+  employee_id int primary key,
+  name text,
+  department text,
+  email text,
+  phone_no numeric,
+  joining_date date,
+  salary numeric,
+  bonus numeric,
+  tax_percentage numeric
 );
 
--- Inserting Values
-INSERT INTO employees VALUES
+-- inserting values
+insert into employees values
 (201, 'Rajesh Kumar', 'Sales', 'rajesh.kumar@example.in', 9123456780, '2025-01-10', 750000, 50000, 10),
 (202, 'Anita Sharma', 'Engineering', 'anita.sharma@example.in', 9123456781, '2024-09-15', 1200000, 100000, 20),
 (203, 'Ravi Verma', 'HR', 'ravi.verma@example.in', 9123456782, '2025-04-05', 600000, 30000, 10),
@@ -28,61 +28,61 @@ INSERT INTO employees VALUES
 (209, 'Imran Khan', 'Sales', 'imran.khan@example.in', 9123456788, '2025-06-01', 900000, 70000, 10),
 (210, 'Priya Desai', 'Marketing', 'priya.desai@example.in', 9123456789, '2024-12-12', 880000, 65000, 14);
 
--- Payroll Queries
--- 1. Retrieve the list of employees sorted by salary in descending order
-SELECT * FROM employees
-ORDER BY SALARY DESC;
+-- payroll queries
 
--- 2. Find employees with a total compensation (SALARY + BONUS) greater than 100,000
-SELECT * FROM employees
-WHERE (SALARY + BONUS) > 100000;
+-- 1. retrieve the list of employees sorted by salary in descending order
+select * from employees
+order by salary desc;
 
--- 3. Update the bonus for employees in the ‘Sales’ department by 10%
-UPDATE employees
-SET BONUS = BONUS * 1.10
-WHERE DEPARTMENT = 'Sales'
-;
+-- 2. find employees with a total compensation (salary + bonus) greater than 100,000
+select * from employees
+where (salary + bonus) > 100000;
 
--- 4. Calculate the net salary after deducting tax for all employees
-SELECT 
-    EMPLOYEE_ID,
-    NAME,
-    SALARY,
-    BONUS,
-    TAX_PERCENTAGE,
-    (SALARY + BONUS - ((SALARY + BONUS) * TAX_PERCENTAGE / 100)) AS NET_SALARY
-FROM employees;
+-- 3. update the bonus for employees in the ‘Sales’ department by 10%
+update employees
+set bonus = bonus * 1.10
+where department = 'Sales';
 
--- 5. Retrieve the average, minimum, and maximum salary per department
-SELECT 
-    DEPARTMENT,
-    AVG(SALARY) AS AVG_SALARY,
-    MIN(SALARY) AS MIN_SALARY,
-    MAX(SALARY) AS MAX_SALARY
-FROM employees
-GROUP BY DEPARTMENT;
+-- 4. calculate the net salary after deducting tax for all employees
+select
+  employee_id,
+  name,
+  salary,
+  bonus,
+  tax_percentage,
+  (salary + bonus - ((salary + bonus) * tax_percentage / 100)) as net_salary
+from employees;
 
+-- 5. retrieve the average, minimum, and maximum salary per department
+select
+  department,
+  avg(salary) as avg_salary,
+  min(salary) as min_salary,
+  max(salary) as max_salary
+from employees
+group by department;
 
--- Advanced Queries
--- 1. Retrieve employees who joined in the last 6 months
-SELECT * FROM employees
-WHERE JOINING_DATE >= curdate() - INTERVAL 6 MONTH;
+-- advanced queries
 
--- 2. Group employees by department and count how many employees each has
-SELECT DEPARTMENT, COUNT(*) AS EMPLOYEE_COUNT
-FROM employees
-GROUP BY DEPARTMENT;
+-- 1. retrieve employees who joined in the last 6 months
+select * from employees
+where joining_date >= curdate() - interval 6 month;
 
--- 3.Find the department with the highest average salary
-SELECT DEPARTMENT
-FROM employees
-GROUP BY DEPARTMENT
-ORDER BY AVG(SALARY) DESC
-LIMIT 1;
+-- 2. group employees by department and count how many employees each has
+select department, count(*) as employee_count
+from employees
+group by department;
 
--- 4. Identify employees who have the same salary as at least one other employee
-SELECT * FROM employees
-WHERE SALARY IN (
-    SELECT SALARY FROM employees
-    GROUP BY SALARY
-    HAVING COUNT(*) > 1);
+-- 3. find the department with the highest average salary
+select department
+from employees
+group by department
+order by avg(salary) desc
+limit 1;
+
+-- 4. identify employees who have the same salary as at least one other employee
+select * from employees
+where salary in (
+  select salary from employees
+  group by salary
+  having count(*) > 1);
